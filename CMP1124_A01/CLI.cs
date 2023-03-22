@@ -23,20 +23,23 @@ public class CLI
                 int choice = Convert.ToInt32(Console.ReadLine());
                 switch (choice)
                 {
+                    case 0:
+                        Console.WriteLine("Exiting application!");
+                        return;
                     case 1:
-                        fh.ReadFiles();
+                        ReadFiles();
                         break;
                     case 2:
-                        fh.MergeData();
+                        MergeData();
                         break;
                     case 3:
-                        fh.SeeData();
+                        SeeData();
                         break;
                     case 4:
-                        fh.Search();
+                        Search();
                         break;
                     case 5:
-                        fh.SortData();
+                        SortData();
                         break;
                     default:
                         Console.WriteLine("Choice does not exists");
@@ -50,7 +53,86 @@ public class CLI
             }
         }
     }
+
+    private void ReadFiles()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("Files found: ");
+
+            var allFiles = fh.AllFIles();
+            var files = allFiles.Aggregate("", (current, file) => current + $"{Path.GetFileName(file)}\n");
+            Console.WriteLine(files);
+
+            var options = "[1] All Files\n" + "[2] Select Files\n" + "[3] Back\n";
+            Console.WriteLine(options);
+
+            try
+            {
+                var choice = Convert.ToInt32(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        // Read all Files
+                        break;
+                    case 2:
+                        // Provide option to read select files
+                        break;
+                    case 3:
+                        // Back goes back to Menu
+                        return;
+                    default:
+                        Console.WriteLine("Option does not exists");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            if (ExitMenuOption()) return;
+        }
+    }
+
+    private bool ExitMenuOption()
+    {
+        Console.WriteLine("Do you wish to go back to Menu?");
+        Console.WriteLine(  "[1] Yes\n" 
+                          + "[0 or Any] No");
+        try
+        {
+            var choice = Convert.ToInt32(Console.ReadLine());
+            return choice == 1;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
     
+    private void MergeData()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private void SeeData()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private void Search()
+    {
+            throw new NotImplementedException();
+    }
+    
+    private void SortData()
+    {
+        throw new NotImplementedException();
+    }
+
     private void Menu()
     {
         string choices = "Options\n" +
@@ -58,8 +140,10 @@ public class CLI
                          "[2] Merge Data\n" +
                          "[3] See Data\n" +
                          "[4] Search\n" +
-                         "[5] Sort Data\n";
-        Console.WriteLine(choices);
+                         "[5] Sort Data\n" +
+                         "[0] Exit";
+
+    Console.WriteLine(choices);
     }
     
 }

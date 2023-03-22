@@ -5,13 +5,13 @@ namespace CMP1124_A01;
 public class FileHandler
 {
     
-    private Dictionary<string, List<string>> _storedRoads;
-    private Dictionary<string, List<string>> _combined;
+    private Dictionary<string, string[]> _storedRoads;
+    private Dictionary<string, string[]> _combined;
     
     public FileHandler()
     {
-        _storedRoads = new Dictionary<string, List<string>>();
-        _combined = new Dictionary<string, List<string>>();
+        _storedRoads = new Dictionary<string, string[]>();
+        _combined = new Dictionary<string, string[]>();
     }
 
 
@@ -38,5 +38,12 @@ public class FileHandler
     public void SortData()
     {
         throw new NotImplementedException();
+    }
+
+    public string[] AllFIles()
+    {
+        string dir = Directory.GetCurrentDirectory();
+        string[] files = Directory.GetFiles(dir, "Road_*.txt");
+        return files;
     }
 }
