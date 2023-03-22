@@ -54,6 +54,7 @@ public class CLI
         }
     }
 
+    // Used to Read files into Arrays
     private void ReadFiles()
     {
         while (true)
@@ -68,7 +69,7 @@ public class CLI
             var options = "[1] All Files\n" + "[2] Select Files\n" + "[3] Back\n";
             Console.WriteLine(options);
 
-            void selectFiles()
+            void SelectFiles()
             {
                 var fileOptions = new List<string>(allFiles);
                 if (fileOptions.Count < 1)
@@ -82,9 +83,9 @@ public class CLI
                     Console.Clear();
                     Console.WriteLine("Choose Files to be Read: "); 
                     var opt = 1; 
-                    var options = fileOptions.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n"); 
-                    options += "[0] Back\n";
-                    Console.WriteLine(options);
+                    var fOptions = fileOptions.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n"); 
+                    fOptions += "[0] Back\n";
+                    Console.WriteLine(fOptions);
 
                     try
                     {
@@ -118,7 +119,7 @@ public class CLI
                         break;
                     case 2:
                         // Provide option to read select files
-                        selectFiles();
+                        SelectFiles();
                         break;
                     case 3:
                         // Back goes back to Menu
@@ -134,26 +135,10 @@ public class CLI
                 throw;
             }
 
-            if (ExitMenuOption()) return;
-        }
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();        }
     }
 
-    private bool ExitMenuOption()
-    {
-        Console.WriteLine("Do you wish to go back to Menu?");
-        Console.WriteLine(  "[1] Yes\n" 
-                          + "[0 or Any] No");
-        try
-        {
-            var choice = Convert.ToInt32(Console.ReadLine());
-            return choice == 1;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-    }
-    
     private void MergeData()
     {
         throw new NotImplementedException();
@@ -161,7 +146,49 @@ public class CLI
     
     private void SeeData()
     {
-        throw new NotImplementedException();
+        Console.Clear();
+        Console.WriteLine("Files stored: ");
+        
+        var allFiles = fh.AllFIles();
+        var opt = 1;
+        var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n");
+        options += "[0] Back\n";
+        
+        Console.WriteLine(options);
+
+        try
+        {
+            
+            var choice = Convert.ToInt32(Console.ReadLine());
+            if (choice == 0) return;
+            if (choice > allFiles.Length)
+            {
+                Console.WriteLine("Choice does not exists");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            };
+            
+            var file = allFiles[choice - 1];
+            var data = fh.SeeData(file);
+            var step = (data.Length < 2048) ? 10 :  50;
+            
+            var dataString = "";
+            
+            for (int i = 0; i < data.Length; i += step)
+            {
+                dataString += $"{data[i]}\n";
+            }
+            
+            Console.WriteLine(dataString);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
     }
     
     private void Search()

@@ -33,7 +33,7 @@ public class FileHandler
         throw new NotImplementedException();
     }
 
-    public void SeeData()
+    public string[] SeeData(string file)
     {
         throw new NotImplementedException();
     }
