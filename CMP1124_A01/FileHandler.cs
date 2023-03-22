@@ -15,9 +15,17 @@ public class FileHandler
     }
 
 
-    public void ReadFiles()
+    public void ReadFiles(string[] files)
     {
-        throw new NotImplementedException();
+        foreach (var file in files)
+        {
+            var fileName = Path.GetFileName(file);
+            
+            if (_storedRoads.ContainsKey(file)) continue;
+            
+            var fileData = File.ReadAllLines(file);
+            _storedRoads[fileName] = fileData;
+        }
     }
 
     public void MergeData()
@@ -43,7 +51,7 @@ public class FileHandler
     public string[] AllFIles()
     {
         string dir = Directory.GetCurrentDirectory();
-        string[] files = Directory.GetFiles(dir, "Road_*.txt");
+        string[] files = Directory.GetFiles(dir, "Road_Data1/Road_*.txt");
         return files;
     }
 }

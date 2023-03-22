@@ -68,6 +68,45 @@ public class CLI
             var options = "[1] All Files\n" + "[2] Select Files\n" + "[3] Back\n";
             Console.WriteLine(options);
 
+            void selectFiles()
+            {
+                var fileOptions = new List<string>(allFiles);
+                if (fileOptions.Count < 1)
+                {
+                    Console.WriteLine("No Files Found!");
+                    return;
+                }
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Choose Files to be Read: "); 
+                    var opt = 1; 
+                    var options = fileOptions.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n"); 
+                    options += "[0] Back\n";
+                    Console.WriteLine(options);
+
+                    try
+                    {
+                        var choice = Convert.ToInt32(Console.ReadLine());
+                        if (choice == 0) return;
+                        if (choice > fileOptions.Count) return;
+                        
+                        fh.ReadFiles(new []{fileOptions[choice - 1]});
+                        fileOptions.RemoveAt(choice - 1);
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                    
+                }
+                    
+                    
+            }
+            
             try
             {
                 var choice = Convert.ToInt32(Console.ReadLine());
@@ -75,9 +114,11 @@ public class CLI
                 {
                     case 1:
                         // Read all Files
+                        fh.ReadFiles(allFiles);
                         break;
                     case 2:
                         // Provide option to read select files
+                        selectFiles();
                         break;
                     case 3:
                         // Back goes back to Menu
