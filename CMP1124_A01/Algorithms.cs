@@ -211,7 +211,7 @@ public class Algorithms
         for (int i = 0; i < a.Length; i++)
         {
             counter++;
-            var tDelta = Math.Abs(i - key);
+            var tDelta = Math.Abs(a[i] - key);
             // if the difference is less than the current delta, clear the list and add the current index
             // if new delta is smaller then all old values are no longer the closest
             if (tDelta < delta)
@@ -227,6 +227,7 @@ public class Algorithms
         }
         
         Console.WriteLine($"Sequential Search: {counter} comparisons");
+        result.Add(a[result[0]]);
         return result.ToArray();
     }
     

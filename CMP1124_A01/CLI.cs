@@ -226,12 +226,12 @@ public class Cli
             var file = allFiles[choice - 1];
 
             var result = _fh.Search(Path.GetFileName(file), value);
-            Console.WriteLine((result[0] == value) ? "Entered value found!" : "Entered value not found!");
-            Console.WriteLine((result[0] == value) ? "All found values: " : "All closest values: ");
+            Console.WriteLine((result[^1] == value) ? "Entered value found!" : "Entered value not found!");
+            Console.WriteLine((result[^1] == value) ? "All found values: " : "All closest values: ");
 
-            foreach (var x in result)
+            for (int i = 0; i < result.Length - 1; i++)
             {
-                Console.WriteLine(x);
+                Console.WriteLine("Line: " + result[i+1] + " Value: " + result[^1]);
             }
             
             Console.WriteLine("\nPress any key to continue...");
@@ -295,7 +295,9 @@ public class Cli
                     case 1:
                         // Sort all Files
                         _fh.SortData(allFiles);
-                        break;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        return;
                     case 2:
                         // Provide option to sort select files
                         SelectFiles();
