@@ -15,7 +15,7 @@ public class Algorithms
 
 
     // Bubble Sort
-    // Taken from lecture slides
+    // Taken from GeeksForGeeks
     public static int[] BubbleSort(int[] a, bool ascending = true)
     {
         int n = a.Length;
@@ -136,7 +136,7 @@ public class Algorithms
     // 2. Binary Search
 
     // Sequential Search
-    // Taken from lecture slides
+    // Taken from ?
     public static int[] SequentialSearch(int[] a, int key)
     {
         var counter = 0;
@@ -168,7 +168,7 @@ public class Algorithms
     }
     
     // Binary Search
-    // Taken from lecture slides
+    // Taken from ?
     // REQUIRMENT: Array must be sorted
 
     public static int[] BinarySearch(int[] a, int key)
