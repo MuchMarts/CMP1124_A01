@@ -199,7 +199,49 @@ public class Cli
 
     private void Search()
     {
-            throw new NotImplementedException();
+        Console.Clear();
+        Console.WriteLine("Choose a file to search: ");
+        var allFiles = _fh.AllLoadedFiles();
+        var opt = 1;
+        var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n");
+        options += "[0] Back\n";
+        
+        Console.WriteLine(options);
+
+        try
+        {
+            var choice = Convert.ToInt32(Console.ReadLine());
+            if (choice == 0) return;
+            if (choice > allFiles.Length)
+            {
+                Console.WriteLine("Choice does not exists");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+            
+            Console.WriteLine("Choose a value to search: ");
+            
+            var value = Convert.ToInt32(Console.ReadLine());
+            var file = allFiles[choice - 1];
+
+            var result = _fh.Search(Path.GetFileName(file), value);
+            Console.WriteLine((result[0] == value) ? "Entered value found!" : "Entered value not found!");
+            Console.WriteLine((result[0] == value) ? "All found values: " : "All closest values: ");
+
+            foreach (var x in result)
+            {
+                Console.WriteLine(x);
+            }
+            
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private void SortData()

@@ -46,9 +46,10 @@ public class FileHandler
         throw new Exception("Stored file not found in either _storedRoads or _combined");
     }
 
-    public void Search()
+    public int[] Search(string file, int key)
     {
-        throw new NotImplementedException();
+        var result = Algorithms.SequentialSearch(SeeData(file), key);
+        return result;
     }
 
     public void SortData(string[] files)
