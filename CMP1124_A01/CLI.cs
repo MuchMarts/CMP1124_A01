@@ -41,6 +41,9 @@ public class Cli
                     case 5:
                         SortData();
                         break;
+                    case 6:
+                        TestAlgos();
+                        break;
                     default:
                         Console.WriteLine("Choice does not exists");
                         break;
@@ -52,6 +55,11 @@ public class Cli
                 throw;
             }
         }
+    }
+
+    private void TestAlgos()
+    {
+        throw new NotImplementedException();
     }
 
     // Used to Read files into Arrays
