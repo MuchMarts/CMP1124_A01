@@ -5,13 +5,13 @@ namespace CMP1124_A01;
 public class FileHandler
 {
     
-    private Dictionary<string, string[]> _storedRoads;
-    private Dictionary<string, string[]> _combined;
+    private Dictionary<string, int[]> _storedRoads;
+    private Dictionary<string, int[]> _combined;
     
     public FileHandler()
     {
-        _storedRoads = new Dictionary<string, string[]>();
-        _combined = new Dictionary<string, string[]>();
+        _storedRoads = new Dictionary<string, int[]>();
+        _combined = new Dictionary<string, int[]>();
     }
 
 
@@ -24,7 +24,7 @@ public class FileHandler
             if (_storedRoads.ContainsKey(file)) continue;
             
             var fileData = File.ReadAllLines(file);
-            _storedRoads[fileName] = fileData;
+            _storedRoads[fileName] = fileData.Select(n => Convert.ToInt32(n)).ToArray();
         }
     }
 
@@ -33,7 +33,7 @@ public class FileHandler
         throw new NotImplementedException();
     }
 
-    public string[] SeeData(string file)
+    public int[] SeeData(string file)
     {
         if(_storedRoads.ContainsKey(file)) return _storedRoads[file];
         if(_combined.ContainsKey(file)) return _combined[file];
