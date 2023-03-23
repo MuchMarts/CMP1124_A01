@@ -82,6 +82,7 @@ public class Cli
             
             // Gets all file paths and transforms it into a list of file names
             var allFiles = _fh.AllFiles();
+            
             var files = allFiles.Aggregate("", (current, file) => current + $"{Path.GetFileName(file)}\n");
             Console.WriteLine(files);
             
@@ -101,7 +102,6 @@ public class Cli
                 
                 // Loop that allows user to pick multiple files that get read into arrays
                 // fOptions stores all non picked files
-                // TODO: Check if file has all ready been read
                 while (true)
                 {
                     Console.Clear();
@@ -139,9 +139,10 @@ public class Cli
                 switch (choice)
                 {
                     case 1:
+                        Console.WriteLine("here");
                         // Read all Files
                         _fh.ReadFiles(allFiles);
-                        break;
+                        return;
                     case 2:
                         // Provide option to read select files
                         SelectFiles();
@@ -154,9 +155,9 @@ public class Cli
                         break;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("Invalid input. Try agian!");
+                Console.WriteLine("Invalid input. Try again!");
                 TempStop();
             }
         }
@@ -325,7 +326,7 @@ public class Cli
             }
             TempStop();
         }
-        catch (Exception e)
+        catch
         {
             Console.WriteLine("Invalid input. Try Again!");
             TempStop();
