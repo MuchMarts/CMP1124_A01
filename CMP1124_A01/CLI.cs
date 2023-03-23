@@ -110,10 +110,7 @@ public class Cli
                         Console.WriteLine(e);
                         throw;
                     }
-                    
                 }
-                    
-                    
             }
             
             try
@@ -143,15 +140,66 @@ public class Cli
                 throw;
             }
 
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+            TempStop();
             return;
         }
     }
-
+    
+    private void TempStop()
+    {
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();    
+    }
+    
     private void MergeData()
     {
-        throw new NotImplementedException();
+        var allFiles = _fh.AllLoadedFiles().ToList();
+        var chosenFiles = new List<string>();
+        
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("Choose files to merge: ");
+
+            var opt = 1;
+            var notChosenFiles = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {file}\n");
+            notChosenFiles += "[0] Merge\n" + "[-1] Back\n";
+
+            string cFiles;
+            if (chosenFiles.Count > 0)
+            {
+                opt = 1;
+                cFiles = chosenFiles.Aggregate("", (current, file) => current + $"[{opt++}] {file}\n");
+            } else cFiles = "No Files Chosen\n";
+
+            Console.WriteLine("Chosen Files: ");
+            Console.WriteLine(cFiles);
+            Console.WriteLine("Not Chosen Files: ");
+            Console.WriteLine(notChosenFiles);
+
+            try
+            {
+                var choice = Convert.ToInt32(Console.ReadLine());
+                if (choice == 0)
+                {
+                    _fh.MergeData(chosenFiles.ToArray());
+                    TempStop();
+                    return;
+                }
+
+                if (choice == -1) return;
+                if (choice > allFiles.Count) return;
+
+                chosenFiles.Add(allFiles[choice - 1]);
+                allFiles.RemoveAt(choice - 1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        }
     }
 
     private void SeeData()
@@ -163,7 +211,7 @@ public class Cli
 
             var allFiles = _fh.AllLoadedFiles();
             var opt = 1;
-            var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n");
+            var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {file}\n");
             options += "[0] Back\n";
 
             Console.WriteLine(options);
@@ -175,15 +223,14 @@ public class Cli
                 if (choice > allFiles.Length)
                 {
                     Console.WriteLine("Choice does not exists");
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey();
+                    TempStop();
                     return;
                 }
 
                 
 
                 var file = allFiles[choice - 1];
-                var data = _fh.SeeData(Path.GetFileName(file));
+                var data = _fh.SeeData(file);
                 var step = (data.Length < 2048) ? 10 : 50;
 
                 var dataString = "";
@@ -194,8 +241,7 @@ public class Cli
                 }
 
                 Console.WriteLine(dataString);
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey();
+                TempStop();
             }
             catch (Exception e)
             {
@@ -211,7 +257,7 @@ public class Cli
         Console.WriteLine("Choose a file to search: ");
         var allFiles = _fh.AllLoadedFiles();
         var opt = 1;
-        var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n");
+        var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {file}\n");
         options += "[0] Back\n";
         
         Console.WriteLine(options);
@@ -223,8 +269,7 @@ public class Cli
             if (choice > allFiles.Length)
             {
                 Console.WriteLine("Choice does not exists");
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey();
+                TempStop();
                 return;
             }
             
@@ -233,7 +278,7 @@ public class Cli
             var value = Convert.ToInt32(Console.ReadLine());
             var file = allFiles[choice - 1];
 
-            var result = _fh.Search(Path.GetFileName(file), value);
+            var result = _fh.Search(file, value);
             Console.WriteLine((result[^1] == value) ? "Entered value found!" : "Entered value not found!");
             Console.WriteLine((result[^1] == value) ? "All found values: " : "All closest values: ");
 
@@ -241,9 +286,7 @@ public class Cli
             {
                 Console.WriteLine("Line: " + result[i+1] + " Value: " + result[^1]);
             }
-            
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
+            TempStop();
         }
         catch (Exception e)
         {
@@ -262,39 +305,6 @@ public class Cli
             Console.WriteLine("Algorithms files Options: ");
             Console.WriteLine(options);
 
-            void SelectFiles()
-            {
-                var _allFiles = allFiles.ToList();
-                
-                if(_allFiles.Count < 1)
-                {
-                    Console.WriteLine("No Files Found!");
-                    return;
-                }
-                
-                while (true)
-                {
-                    var sOpt = 1;
-                    var fileOptions = _allFiles.Aggregate("[0] Back\n", (current, file) => current + $"[{sOpt++}] {Path.GetFileName(file)}\n");
-                    Console.WriteLine(fileOptions);
-                    try
-                    {
-                        var choice = Convert.ToInt32(Console.ReadLine());
-                        
-                        if (choice == 0) return;
-                        if (choice > _allFiles.Count) return;
-                        
-                        _fh.SortData(new []{_allFiles[choice - 1]});
-                        _allFiles.RemoveAt(choice - 1);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                }
-            }
-
             try
             {
                 var choice = Convert.ToInt32(Console.ReadLine());
@@ -303,13 +313,12 @@ public class Cli
                     case 1:
                         // Sort all Files
                         _fh.SortData(allFiles);
-                        Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();
+                        TempStop();
                         return;
                     case 2:
                         // Provide option to sort select files
                         SelectFiles();
-                        break;
+                        return;
                     case 3:
                         // Back goes back to Menu
                         return;
@@ -317,6 +326,42 @@ public class Cli
                         Console.WriteLine("Option does not exists");
                         break;
                 }
+                
+                void SelectFiles()
+                {
+                    var notSorted = _fh.getNotSorted().ToList();
+                    
+                    if(notSorted.Count < 1)
+                    {
+                        Console.WriteLine("No Files Found!");
+                        return;
+                    }
+                    
+                
+                    while (true)
+                    {
+                        var sOpt = 1;
+                        var fileOptions = notSorted.Aggregate("[0] Back\n", (current, file) => current + $"[{sOpt++}] {file}\n");
+                        Console.Write(fileOptions);
+                        try
+                        {
+                            var choice = Convert.ToInt32(Console.ReadLine());
+                        
+                            if (choice == 0) return;
+                            if (choice > notSorted.Count) return;
+                        
+                            _fh.SortData(new []{notSorted[choice - 1]});
+                            notSorted.RemoveAt(choice - 1);
+                            return;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
+                }
+                
             }
             catch (Exception e)
             {

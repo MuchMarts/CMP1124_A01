@@ -1,3 +1,5 @@
+using System.Runtime.Versioning;
+
 namespace CMP1124_A01;
 
 // This will be responsible for handling all of the file IO and merging the data
@@ -80,14 +82,13 @@ public class FileHandler
     {
         int[] result;
         
-        if (_sorted.ContainsKey(file))
+        if (_sorted.ContainsKey(file)) result = Algorithms.BinarySearch(SeeData(file), key);
+        else
         {
             Console.WriteLine("File has not been Sorted!");
-            result = Algorithms.BinarySearch(SeeData(file), key);
+            result = Algorithms.SequentialSearch(SeeData(file), key);
+        }
 
-        } 
-        else result = Algorithms.SequentialSearch(SeeData(file), key);
-        
         return result;
     }
 
@@ -95,7 +96,8 @@ public class FileHandler
     {
         foreach (var file in files)
         {
-            var name = Path.GetFileName(file);
+            var name = file;
+            if (_sorted.ContainsKey(name)) continue;
             if (_storedRoads.ContainsKey(name))
             {
                 _sorted[name] = Algorithms.BubbleSort(_storedRoads[name]);
@@ -111,6 +113,17 @@ public class FileHandler
         }
     }
 
+    public string[] getNotSorted()
+    {
+        var all = AllLoadedFiles();
+        var notSorted = new List<string>();
+        foreach (var file in all)
+        {
+            if (!_sorted.ContainsKey(file)) notSorted.Add(file);
+        }
+        
+        return notSorted.ToArray();
+    }
     public string[] AllLoadedFiles()
     {
         var files = _storedRoads.Keys.ToList();
