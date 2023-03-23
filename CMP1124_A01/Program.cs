@@ -8,5 +8,8 @@ public class Program
     {
         Cli cli = new Cli();
         cli.Run();
+        
+        //Testing t = new Testing();
+        
     }
 }

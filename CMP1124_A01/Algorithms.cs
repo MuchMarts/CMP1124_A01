@@ -243,8 +243,6 @@ public class Algorithms
         var end = a.Length - 1;
         var mid = end / 2;
         
-        var result = new List<int>();
-        
         while ((begin <= end) && (a[mid] != key))
         {
             counter++;
@@ -261,21 +259,23 @@ public class Algorithms
         
         // Find all values that are the same as the key or near the key
         // Might be an inneficent way to do this
+        var result = new List<int>();
         result.Add(mid);
 
         for (int i = 1; i < a.Length; i++)
         {
             counter++;
-            if (mid + i < a.Length && a[mid+i] == result[0]) result.Add(mid+i);
+            if (mid + i < a.Length && a[mid+i] == a[result[0]]) result.Add(mid+i);
             else break;
         }
         for (int i = 1; i < a.Length; i++)
         {
             counter++;
-            if (mid - i >= 0 && a[mid-i] == result[0]) result.Add(mid-i);
+            if (mid - i >= 0 && a[mid-i] == a[result[0]]) result.Add(mid-i);
             else break;
         }
-
+        Console.WriteLine($"Binary Search: {counter} comparisons");
+        result.Add(a[result[0]]);
         return result.ToArray();
     }
     

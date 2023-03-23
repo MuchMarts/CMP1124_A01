@@ -74,7 +74,7 @@ public class Cli
             var files = allFiles.Aggregate("", (current, file) => current + $"{Path.GetFileName(file)}\n");
             Console.WriteLine(files);
 
-            var options = "[1] All Files\n" + "[2] Select Files\n" + "[3] Back\n";
+            var options = "[0] Back\n" + "[1] All Files\n" + "[2] Select Files\n";
             Console.WriteLine(options);
 
             void SelectFiles()
@@ -126,7 +126,7 @@ public class Cli
                         // Provide option to read select files
                         SelectFiles();
                         break;
-                    case 3:
+                    case 0:
                         // Back goes back to Menu
                         return;
                     default:
@@ -300,7 +300,7 @@ public class Cli
         while (true)
         {
             var allFiles = _fh.AllLoadedFiles();
-            var options = "[1] Sort All Files\n" + "[2] Sort Select Files\n" + "[3] Back\n";
+            var options = "[0] Back\n" + "[1] Sort All Files\n" + "[2] Sort Select Files\n";
             Console.Clear();
             Console.WriteLine("Algorithms files Options: ");
             Console.WriteLine(options);
@@ -318,8 +318,8 @@ public class Cli
                     case 2:
                         // Provide option to sort select files
                         SelectFiles();
-                        return;
-                    case 3:
+                        break;
+                    case 0:
                         // Back goes back to Menu
                         return;
                     default:
@@ -352,7 +352,6 @@ public class Cli
                         
                             _fh.SortData(new []{notSorted[choice - 1]});
                             notSorted.RemoveAt(choice - 1);
-                            return;
                         }
                         catch (Exception e)
                         {

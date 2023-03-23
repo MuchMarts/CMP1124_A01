@@ -81,11 +81,16 @@ public class FileHandler
     public int[] Search(string file, int key)
     {
         int[] result;
-        
-        if (_sorted.ContainsKey(file)) result = Algorithms.BinarySearch(SeeData(file), key);
+
+        if (_sorted.ContainsKey(file))
+        {
+            Console.WriteLine("Using Binary Search");
+            result = Algorithms.BinarySearch(SeeData(file), key);
+        }
         else
         {
             Console.WriteLine("File has not been Sorted!");
+            Console.WriteLine("Using Sequential Search");
             result = Algorithms.SequentialSearch(SeeData(file), key);
         }
 
