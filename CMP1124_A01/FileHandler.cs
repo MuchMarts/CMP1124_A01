@@ -4,16 +4,25 @@ namespace CMP1124_A01;
 
 public class FileHandler
 {
-    
+    // Store arrays of data with a key of the file name
     private Dictionary<string, int[]> _storedRoads;
     private Dictionary<string, int[]> _combined;
     private Dictionary<string, int[]> _sorted;
     
+    // translation layer for combined files for easy access
+    private Dictionary<string, int> _nameToKey;
+    private Dictionary<int, string> _keyToName;
+    // keyIndex used to distinguish between files used in combinations
+    private int _keyIndex = 1;
+
     public FileHandler()
     {
         _storedRoads = new Dictionary<string, int[]>();
         _combined = new Dictionary<string, int[]>();
         _sorted = new Dictionary<string, int[]>();
+        
+        _nameToKey = new Dictionary<string, int>();
+        _keyToName = new Dictionary<int, string>();
     }
 
 
@@ -30,9 +39,32 @@ public class FileHandler
         }
     }
 
-    public void MergeData()
+    public void MergeData(string[] files)
     {
-        throw new NotImplementedException();
+        var keys = new List<int>();
+        var value = new List<int>();
+
+        // Add new files to translation layer and sort keys
+        foreach (var file in files)
+        {
+            if (_combined.ContainsKey(file)) value.AddRange(_combined[file]);
+            if (_storedRoads.ContainsKey(file)) value.AddRange(_storedRoads[file]);
+            
+            if (!_nameToKey.ContainsKey(file))
+            {
+                _nameToKey[file] = _keyIndex++;
+                _keyToName[_nameToKey[file]] = file;
+            }
+            keys.Add(_nameToKey[file]);
+            
+        }
+        
+        var sKeys = Algorithms.BubbleSort(keys.ToArray());
+        var combinedKey = string.Join("-", sKeys);
+        
+        if (_combined.ContainsKey(combinedKey)) return;
+        
+        _combined[combinedKey] = value.ToArray();
     }
 
     public int[] SeeData(string file)
