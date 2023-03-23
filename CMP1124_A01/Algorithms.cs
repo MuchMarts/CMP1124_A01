@@ -43,7 +43,7 @@ public class Algorithms
     
     // Insertion Sort
     // Taken from lecture slides
-    static int[] InsertionSort(int[] data)
+    public static int[] InsertionSort(int[] data, bool ascending = true)
     {
         var counter = 0;
         var numSorted = 1;
@@ -55,8 +55,16 @@ public class Algorithms
             for (index=numSorted; index>0; index--)
             {
                 counter++;
-                if (temp < data[index-1]) data[index] = data[index - 1];
-                else break;
+                if (ascending)
+                {
+                    if (temp < data[index - 1]) data[index] = data[index - 1];
+                    else break;
+                }
+                else
+                {
+                    if (temp > data[index - 1]) data[index] = data[index - 1];
+                    else break;
+                }
             }
             
             // reinsert value
@@ -69,7 +77,8 @@ public class Algorithms
     
     // Merge Sort
     // Taken from lecture slides
-    private static void Merge(int[] data, int[] temp, int low, int middle, int high, ref int counter) {
+    private static void Merge(int[] data, int[] temp, int low, int middle, int high, ref int counter, bool ascending = true) 
+    {
 
         var ri = low;
         var ti = low;
@@ -77,9 +86,17 @@ public class Algorithms
         
         while (ti < middle && di <= high)
         {
-            if (data[di] < temp[ti]) data[ri++] = data[di++];
-            else data[ri++] = temp[ti++];
             counter++;
+            if (ascending)
+            {
+                if (data[di] < temp[ti]) data[ri++] = data[di++];
+                else data[ri++] = temp[ti++];
+            }
+            else
+            {
+                if (data[di] > temp[ti]) data[ri++] = data[di++];
+                else data[ri++] = temp[ti++];
+            }
         }
         
         while (ti < middle){
@@ -87,7 +104,7 @@ public class Algorithms
             counter++;
         }
     }
-    private static void MergeSortRecursive(int[] data, int[] temp, int low, int high, ref int counter) {
+    private static void MergeSortRecursive(int[] data, int[] temp, int low, int high, ref int counter, bool ascending) {
         var n = high-low+1;
         var middle = low + n/2;
         int i;
@@ -99,15 +116,15 @@ public class Algorithms
             counter++;
         }
         
-        MergeSortRecursive(temp, data, low, middle-1, ref counter);
-        MergeSortRecursive(data, temp, middle, high, ref counter);
-        Merge(data, temp, low, middle, high, ref counter);
+        MergeSortRecursive(temp, data, low, middle-1, ref counter, ascending);
+        MergeSortRecursive(data, temp, middle, high, ref counter,ascending);
+        Merge(data, temp, low, middle, high, ref counter, ascending);
     }
-    public int[] MergeSort(int[] data) {
+    public static int[] MergeSort(int[] data, bool ascending = true) {
         int counter = 0;
         var n = data.Length;
         var temp = new int[n];
-        MergeSortRecursive(data, temp, 0, n-1, ref counter);
+        MergeSortRecursive(data, temp, 0, n-1, ref counter, ascending);
         Console.WriteLine($"Merge Sort: {counter} comparisons");
         return data;
     }

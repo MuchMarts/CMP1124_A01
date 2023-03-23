@@ -105,12 +105,12 @@ public class FileHandler
             if (_sorted.ContainsKey(name) && _sortType[name] == ascending) continue;
             if (_storedRoads.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.BubbleSort(_storedRoads[name], ascending);
+                _sorted[name] = Algorithms.MergeSort(_storedRoads[name], ascending);
                 _sortType[name] = ascending;
             }
             else if (_combined.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.BubbleSort(_combined[name], ascending);
+                _sorted[name] = Algorithms.MergeSort(_combined[name], ascending);
                 _sortType[name] = ascending;
             }
             else
