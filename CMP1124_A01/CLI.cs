@@ -2,12 +2,12 @@ namespace CMP1124_A01;
 
 // This will be the main class that will handle the user interface and call the other classes
 
-public class CLI
+public class Cli
 {
-    private FileHandler fh;
-    public CLI()
+    private FileHandler _fh;
+    public Cli()
     {
-        fh = new FileHandler();
+        _fh = new FileHandler();
     }
     
     public void Run()
@@ -62,7 +62,7 @@ public class CLI
             Console.Clear();
             Console.WriteLine("Files found: ");
 
-            var allFiles = fh.AllFIles();
+            var allFiles = _fh.AllFiles();
             var files = allFiles.Aggregate("", (current, file) => current + $"{Path.GetFileName(file)}\n");
             Console.WriteLine(files);
 
@@ -93,7 +93,7 @@ public class CLI
                         if (choice == 0) return;
                         if (choice > fileOptions.Count) return;
                         
-                        fh.ReadFiles(new []{fileOptions[choice - 1]});
+                        _fh.ReadFiles(new []{fileOptions[choice - 1]});
                         fileOptions.RemoveAt(choice - 1);
                         
                     }
@@ -115,7 +115,7 @@ public class CLI
                 {
                     case 1:
                         // Read all Files
-                        fh.ReadFiles(allFiles);
+                        _fh.ReadFiles(allFiles);
                         break;
                     case 2:
                         // Provide option to read select files
@@ -136,7 +136,9 @@ public class CLI
             }
 
             Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();        }
+            Console.ReadKey();
+            return;
+        }
     }
 
     private void MergeData()
@@ -148,8 +150,8 @@ public class CLI
     {
         Console.Clear();
         Console.WriteLine("Files stored: ");
-        
-        var allFiles = fh.AllFIles();
+
+        var allFiles = _fh.AllLoadedFiles();
         var opt = 1;
         var options = allFiles.Aggregate("", (current, file) => current + $"[{opt++}] {Path.GetFileName(file)}\n");
         options += "[0] Back\n";
@@ -166,10 +168,11 @@ public class CLI
                 Console.WriteLine("Choice does not exists");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
+                return;
             };
             
             var file = allFiles[choice - 1];
-            var data = fh.SeeData(file);
+            var data = _fh.SeeData(Path.GetFileName(file));
             var step = (data.Length < 2048) ? 10 :  50;
             
             var dataString = "";

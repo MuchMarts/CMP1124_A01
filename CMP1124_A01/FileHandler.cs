@@ -35,7 +35,9 @@ public class FileHandler
 
     public string[] SeeData(string file)
     {
-        throw new NotImplementedException();
+        if(_storedRoads.ContainsKey(file)) return _storedRoads[file];
+        if(_combined.ContainsKey(file)) return _combined[file];
+        throw new Exception("Stored file not found in either _storedRoads or _combined");
     }
 
     public void Search()
@@ -48,10 +50,18 @@ public class FileHandler
         throw new NotImplementedException();
     }
 
-    public string[] AllFIles()
+    public string[] AllLoadedFiles()
+    {
+        var files = _storedRoads.Keys.ToList();
+        files.AddRange(_combined.Keys.ToList());
+        
+        return files.ToArray();
+    }
+    
+    public string[] AllFiles()
     {
         string dir = Directory.GetCurrentDirectory();
-        string[] files = Directory.GetFiles(dir, "Road_Data1/Road_*.txt");
+        string[] files = Directory.GetFiles(dir, "Road_Data/Road_*.txt");
         return files;
     }
 }
