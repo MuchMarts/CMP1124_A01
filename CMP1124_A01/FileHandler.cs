@@ -70,8 +70,6 @@ public class FileHandler
     public int[] SeeData(string file)
     {
         if(_sorted.ContainsKey(file)) return _sorted[file];
-        Console.WriteLine("File has not been Sorted!");
-        
         if(_storedRoads.ContainsKey(file)) return _storedRoads[file];
         if(_combined.ContainsKey(file)) return _combined[file];
         
@@ -80,7 +78,16 @@ public class FileHandler
 
     public int[] Search(string file, int key)
     {
-        var result = Algorithms.SequentialSearch(SeeData(file), key);
+        int[] result;
+        
+        if (_sorted.ContainsKey(file))
+        {
+            Console.WriteLine("File has not been Sorted!");
+            result = Algorithms.BinarySearch(SeeData(file), key);
+
+        } 
+        else result = Algorithms.SequentialSearch(SeeData(file), key);
+        
         return result;
     }
 
