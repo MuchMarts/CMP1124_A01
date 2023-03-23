@@ -7,11 +7,13 @@ public class FileHandler
     
     private Dictionary<string, int[]> _storedRoads;
     private Dictionary<string, int[]> _combined;
+    private Dictionary<string, int[]> _sorted;
     
     public FileHandler()
     {
         _storedRoads = new Dictionary<string, int[]>();
         _combined = new Dictionary<string, int[]>();
+        _sorted = new Dictionary<string, int[]>();
     }
 
 
@@ -35,8 +37,12 @@ public class FileHandler
 
     public int[] SeeData(string file)
     {
+        if(_sorted.ContainsKey(file)) return _sorted[file];
+        Console.WriteLine("File has not been Sorted!");
+        
         if(_storedRoads.ContainsKey(file)) return _storedRoads[file];
         if(_combined.ContainsKey(file)) return _combined[file];
+        
         throw new Exception("Stored file not found in either _storedRoads or _combined");
     }
 
@@ -45,9 +51,24 @@ public class FileHandler
         throw new NotImplementedException();
     }
 
-    public void SortData()
+    public void SortData(string[] files)
     {
-        throw new NotImplementedException();
+        foreach (var file in files)
+        {
+            var name = Path.GetFileName(file);
+            if (_storedRoads.ContainsKey(name))
+            {
+                _sorted[name] = Algorithms.BubbleSort(_storedRoads[name]);
+            }
+            else if (_combined.ContainsKey(name))
+            {
+                _sorted[name] = Algorithms.BubbleSort(_combined[name]);
+            }
+            else
+            {
+                throw new Exception("File not found in either _storedRoads or _combined");
+            }
+        }
     }
 
     public string[] AllLoadedFiles()
