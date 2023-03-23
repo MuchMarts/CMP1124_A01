@@ -6,24 +6,30 @@ namespace CMP1124_A01;
 
 public class FileHandler
 {
-    // Store arrays of data with a key of the file name
+    // maps file names to arrays of data
     private Dictionary<string, int[]> _storedRoads;
     private Dictionary<string, int[]> _combined;
     private Dictionary<string, int[]> _sorted;
 
+    // maps file names to type of sort order and type of sort algorithm
     private Dictionary<string, bool> _sortType;
     private Dictionary<string, int> _sortAlgo;
 
+    // List of Sorting algorithms
     private string[] _algoTypes = {"Bubble Sort", "Insertion Sort", "Merge Sort"};
+    
+    // Current active sorting algorithm
     private int _currAlgoType = 2;
     
     // translation layer for combined files for easy access
     private Dictionary<string, int> _nameToKey;
+    
     // keyIndex used to distinguish between files used in combinations
     private int _keyIndex = 1;
 
     public FileHandler()
     {
+        // Initializes all of the Dictionaries
         _storedRoads = new Dictionary<string, int[]>();
         _combined = new Dictionary<string, int[]>();
         _sorted = new Dictionary<string, int[]>();
@@ -34,22 +40,26 @@ public class FileHandler
         _nameToKey = new Dictionary<string, int>();
     }
 
+    // Returns Sorting Algorithm name
     public string getAlgoName()
     {
         return _algoTypes[_currAlgoType];
     }
 
+    // Returns size of algorithm array
     public int AlgoAmmount()
     {
         return _algoTypes.Length;
     }
     
+    // Cycles active algorithm by one
     public void cycleAlgo()
     {
         if(_currAlgoType == _algoTypes.Length - 1) _currAlgoType = 0;
         else _currAlgoType++;
     }
     
+    // Read all files and stores them into _storedRoads
     public void ReadFiles(string[] files)
     {
         foreach (var file in files)
@@ -63,6 +73,7 @@ public class FileHandler
         }
     }
 
+    // Handles Merge logic and storage
     public void MergeData(string[] files)
     {
         var keys = new List<int>();
@@ -74,6 +85,8 @@ public class FileHandler
             if (_combined.ContainsKey(file)) value.AddRange(_combined[file]);
             if (_storedRoads.ContainsKey(file)) value.AddRange(_storedRoads[file]);
             
+            // Ads new files to key translation layer for combination creation
+            // key is used to create a unique name for each combination so it can be distinguished in storage
             if (!_nameToKey.ContainsKey(file))
             {
                 _nameToKey[file] = _keyIndex++;
@@ -81,6 +94,7 @@ public class FileHandler
             keys.Add(_nameToKey[file]);
             
         }
+        // Create key and array of values an store it into _combined
         
         var sKeys = Algorithms.BubbleSort(keys.ToArray());
         var combinedKey = string.Join("-", sKeys);
@@ -90,6 +104,7 @@ public class FileHandler
         _combined[combinedKey] = value.ToArray();
     }
 
+    // returns stored data
     public int[] SeeData(string file)
     {
         if(_sorted.ContainsKey(file)) return _sorted[file];
@@ -99,6 +114,7 @@ public class FileHandler
         throw new Exception("Stored file not found in either _storedRoads or _combined");
     }
 
+    // Uses Binary or Sequential search to search for data 
     public int[] Search(string file, int key)
     {
         int[] result;
@@ -118,6 +134,7 @@ public class FileHandler
         return result;
     }
 
+    // Handles all sorting logic, Based on _currAlgoType determines which sorting algorithm has to be used
     public void SortData(string[] files, bool ascending)
     {
         foreach (var file in files)
@@ -128,6 +145,7 @@ public class FileHandler
             
             if (_storedRoads.ContainsKey(name))
             {
+               // 2 switch cases based on where the target file is stored
                 switch (_currAlgoType)
                 {
                     case 0:
@@ -174,6 +192,7 @@ public class FileHandler
         }
     }
 
+    // Get all files that have not been sorted
     public string[] getNotSorted()
     {
         var all = AllLoadedFiles();
@@ -185,6 +204,7 @@ public class FileHandler
         
         return notSorted.ToArray();
     }
+    // Gets all files that have been stored _storedRoads and _combined
     public string[] AllLoadedFiles()
     {
         var files = _storedRoads.Keys.ToList();
@@ -193,6 +213,7 @@ public class FileHandler
         return files.ToArray();
     }
     
+    // Gets all *.txt files in memory
     public string[] AllFiles()
     {
         string dir = Directory.GetCurrentDirectory();

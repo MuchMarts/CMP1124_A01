@@ -24,8 +24,10 @@ public class Testing
             else data2048.Add(Path.GetFileName(file));
         }
         
-        // loop over all 3 algo types
+        // loop over all 3 algo types and ascending/descending types
         
+        
+        // Do this for 256 large arrays
         Console.WriteLine("256\n");
         
         for (int i = 0; i < fh.AlgoAmmount(); i++)
@@ -45,6 +47,7 @@ public class Testing
         }
         
         
+        // Do this for 2048 large arrays
         Console.WriteLine("2048\n");
         
         for (int i = 0; i < fh.AlgoAmmount(); i++)
@@ -63,6 +66,31 @@ public class Testing
             fh.cycleAlgo();
         }
         
+        // Testing algos with bigger files. *Using merge functionality to merge to 2048 arrays into 1*
+        fh.MergeData(new []{data2048[0], data2048[1]});
+        var allFiles = fh.AllLoadedFiles();
+        var listFiles = allFiles.ToList();
         
+        // Remove all regular files will leave only the merged file
+        foreach(var df in data256) listFiles.Remove(df);
+        foreach(var df in data2048) listFiles.Remove(df);
+        
+            
+        Console.WriteLine("4096 Merged file test\n");
+        for (int i = 0; i < fh.AlgoAmmount(); i++)
+        {
+            foreach (var ascend in new[] { true, false })
+            {
+                foreach (var data in listFiles)
+                {
+                    var watch = new Stopwatch();
+                    watch.Start();
+                    fh.SortData(new[] { data }, ascend);
+                    watch.Stop();
+                    Console.WriteLine(watch.ElapsedTicks / 1000);
+                }
+            }
+            fh.cycleAlgo();
+        }
     }
 }
