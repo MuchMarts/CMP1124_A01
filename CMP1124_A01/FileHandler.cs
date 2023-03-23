@@ -12,7 +12,11 @@ public class FileHandler
     private Dictionary<string, int[]> _sorted;
 
     private Dictionary<string, bool> _sortType;
+    private Dictionary<string, int> _sortAlgo;
 
+    private string[] _algoTypes = {"Bubble Sort", "Insertion Sort", "Merge Sort"};
+    private int _currAlgoType = 2;
+    
     // translation layer for combined files for easy access
     private Dictionary<string, int> _nameToKey;
     // keyIndex used to distinguish between files used in combinations
@@ -25,10 +29,27 @@ public class FileHandler
         _sorted = new Dictionary<string, int[]>();
         
         _sortType = new Dictionary<string, bool>();
+        _sortAlgo = new Dictionary<string, int>();
+        
         _nameToKey = new Dictionary<string, int>();
     }
 
+    public string getAlgoName()
+    {
+        return _algoTypes[_currAlgoType];
+    }
 
+    public int AlgoAmmount()
+    {
+        return _algoTypes.Length;
+    }
+    
+    public void cycleAlgo()
+    {
+        if(_currAlgoType == _algoTypes.Length - 1) _currAlgoType = 0;
+        else _currAlgoType++;
+    }
+    
     public void ReadFiles(string[] files)
     {
         foreach (var file in files)
@@ -102,16 +123,49 @@ public class FileHandler
         foreach (var file in files)
         {
             var name = file;
-            if (_sorted.ContainsKey(name) && _sortType[name] == ascending) continue;
+            
+            if (_sorted.ContainsKey(name) && _sortType[name] == ascending && _sortAlgo[name] == _currAlgoType) continue;
+            
             if (_storedRoads.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.MergeSort(_storedRoads[name], ascending);
+                switch (_currAlgoType)
+                {
+                    case 0:
+                        _sorted[name] = Algorithms.BubbleSort(_storedRoads[name], ascending);
+                        break;
+                    case 1:
+                        _sorted[name] = Algorithms.InsertionSort(_storedRoads[name], ascending);
+                        break;
+                    case 2:
+                        _sorted[name] = Algorithms.MergeSort(_storedRoads[name], ascending);
+                        break;
+                    default:
+                        Console.WriteLine("This sorting type does not exists!");
+                        break;
+                }
+                
                 _sortType[name] = ascending;
+                _sortAlgo[name] = _currAlgoType;
             }
             else if (_combined.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.MergeSort(_combined[name], ascending);
+                switch (_currAlgoType)
+                {
+                    case 0:
+                        _sorted[name] = Algorithms.BubbleSort(_combined[name], ascending);
+                        break;
+                    case 1:
+                        _sorted[name] = Algorithms.InsertionSort(_combined[name], ascending);
+                        break;
+                    case 2:
+                        _sorted[name] = Algorithms.MergeSort(_combined[name], ascending);
+                        break;
+                    default:
+                        Console.WriteLine("This sorting type does not exists!");
+                        break;
+                }
                 _sortType[name] = ascending;
+                _sortAlgo[name] = _currAlgoType;
             }
             else
             {

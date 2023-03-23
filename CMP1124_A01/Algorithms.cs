@@ -9,11 +9,9 @@ public class Algorithms
     //
     
     // Implement the following sorting algorithms:
-    // 1. Bubble Sort
-    // 2. Insertion Sort
-    // 3. Merge Sort
-    // 4. Quick Sort
-    // 5. Heap Sort
+    // 1. Bubble Sort O(n^2
+    // 2. Insertion Sort O(n^2)
+    // 3. Merge Sort O(n log n)
 
 
     // Bubble Sort
@@ -128,92 +126,7 @@ public class Algorithms
         Console.WriteLine($"Merge Sort: {counter} comparisons");
         return data;
     }
- 
-    // Quick Sort
-    // Taken from lecture slides
-    public static int[] QuickSort(int[] data)
-    {
-        var counter = 0;
-        Quick_Sort(data, 0, data.Length - 1, ref counter);
-        Console.WriteLine($"Quick Sort: {counter} comparisons");
-        return data;
-    }
-    private static void Quick_Sort(int[] data, int left, int right, ref int counter)
-    {
-        int i, j;
-        int pivot, temp;
-        i = left;
-        j = right;
-        pivot = data[(left + right) / 2];
-    
-        do
-        {
-            while ((data[i] < pivot) && (i < right)) i++; counter++;
-            while ((pivot < data[j]) && (j > left)) j--; counter++;
-            counter++;
-            if (i <= j)
-            {
-                temp = data[i];
-                data[i] = data[j];
-                data[j] = temp;
-                i++;
-                j--;
-            }
-        } while (i <= j);
-        
-        if (left < j) Quick_Sort(data, left, j, ref counter);
-        if (i < right) Quick_Sort(data, i, right, ref counter);
-    }
 
-    // Heap Sort
-    // Taken from lecture slides
-    public static int[] HeapSort(int[] heap)
-    {
-        var counter = 0;
-        var heapSize = heap.Length;
-        int i;
-        for (i = (heapSize - 1) / 2; i >= 0; i--)
-        {
-            Max_Heapify(heap, heapSize, i, ref counter);
-        }
-        for (i = heap.Length - 1; i > 0; i--)
-        {
-            (heap[i], heap[0]) = (heap[0], heap[i]);
-            heapSize--;
-            Max_Heapify(heap, heapSize, 0, ref counter);
-        }
-        Console.WriteLine($"Heap Sort: {counter} comparisons");
-        return heap;
-    }
-
-    private static void Max_Heapify(int[] heap, int heapSize, int index, ref int counter)
-    {
-        while (true)
-        {
-            counter++;
-            var left = (index + 1) * 2 - 1;
-            var right = (index + 1) * 2;
-            var largest = 0;
-            if (left < heapSize && heap[left] > heap[index])
-            {
-                largest = left;
-            }
-            else
-            {
-                largest = index;
-            }
-
-            if (right < heapSize && heap[right] > heap[largest])
-            {
-                largest = right;
-            }
-
-            if (largest == index) return;
-            (heap[index], heap[largest]) = (heap[largest], heap[index]);
-            index = largest;
-        }
-    }
-    
     //
     // SEARCHING ALGORITHMS
     //

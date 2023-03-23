@@ -5,7 +5,8 @@ namespace CMP1124_A01;
 public class Cli
 {
     private FileHandler _fh;
-    private bool ascending = true;
+    private bool _ascending = true;
+
     public Cli()
     {
         _fh = new FileHandler();
@@ -232,7 +233,7 @@ public class Cli
 
                 var file = allFiles[choice - 1];
                 var data = _fh.SeeData(file);
-                var step = (data.Length < 2048) ? 10 : 50;
+                var step = (data.Length < 2048) ? 1 : 50;
 
                 var dataString = "";
 
@@ -301,11 +302,14 @@ public class Cli
         while (true)
         {
             var allFiles = _fh.AllLoadedFiles();
-            var type = (ascending ? " Ascending" : " Descending");
-            var options = "[0] Back\n" + "[1] Sort All Files\n" + "[2] Sort Select Files\n" + "[3] Change Sort Type";
+            var direction = (_ascending ? " Ascending" : " Descending");
+            var options = "[0] Back\n" + "[1] Sort All Files\n" + "[2] Sort Select Files\n" +
+                          "[3] Change Sort Direction\n" + "[4] Change Sorting Algorithm\n";
+            
             Console.Clear();
             Console.WriteLine("Algorithms files Options: ");
-            Console.WriteLine("Current Sort Type: " + type);
+            Console.WriteLine("Current Sort Direction: " + direction);
+            Console.WriteLine("Current sorting algorithm: " + _fh.getAlgoName());
             Console.WriteLine(options);
 
             try
@@ -315,7 +319,7 @@ public class Cli
                 {
                     case 1:
                         // Sort all Files
-                        _fh.SortData(allFiles, ascending);
+                        _fh.SortData(allFiles, _ascending);
                         TempStop();
                         return;
                     case 2:
@@ -324,7 +328,10 @@ public class Cli
                         break;
                     case 3:
                         // Change sort type
-                        ascending = !ascending;
+                        _ascending = !_ascending;
+                        break;
+                    case 4:
+                        _fh.cycleAlgo();
                         break;
                     case 0:
                         // Back goes back to Menu
@@ -357,7 +364,7 @@ public class Cli
                             if (choice == 0) return;
                             if (choice > notSorted.Count) return;
                         
-                            _fh.SortData(new []{notSorted[choice - 1]}, true);
+                            _fh.SortData(new []{notSorted[choice - 1]}, _ascending);
                             notSorted.RemoveAt(choice - 1);
                         }
                         catch (Exception e)

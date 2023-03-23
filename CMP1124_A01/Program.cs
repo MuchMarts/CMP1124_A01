@@ -6,10 +6,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Cli cli = new Cli();
-        cli.Run();
+        // Cli cli = new Cli();
+        // cli.Run();
         
-        //Testing t = new Testing();
+        Testing t = new Testing();
         
     }
 }
