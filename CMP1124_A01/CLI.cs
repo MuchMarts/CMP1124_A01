@@ -5,6 +5,7 @@ namespace CMP1124_A01;
 public class Cli
 {
     private FileHandler _fh;
+    private bool ascending = true;
     public Cli()
     {
         _fh = new FileHandler();
@@ -300,9 +301,11 @@ public class Cli
         while (true)
         {
             var allFiles = _fh.AllLoadedFiles();
-            var options = "[0] Back\n" + "[1] Sort All Files\n" + "[2] Sort Select Files\n";
+            var type = (ascending ? " Ascending" : " Descending");
+            var options = "[0] Back\n" + "[1] Sort All Files\n" + "[2] Sort Select Files\n" + "[3] Change Sort Type";
             Console.Clear();
             Console.WriteLine("Algorithms files Options: ");
+            Console.WriteLine("Current Sort Type: " + type);
             Console.WriteLine(options);
 
             try
@@ -312,12 +315,16 @@ public class Cli
                 {
                     case 1:
                         // Sort all Files
-                        _fh.SortData(allFiles);
+                        _fh.SortData(allFiles, ascending);
                         TempStop();
                         return;
                     case 2:
                         // Provide option to sort select files
                         SelectFiles();
+                        break;
+                    case 3:
+                        // Change sort type
+                        ascending = !ascending;
                         break;
                     case 0:
                         // Back goes back to Menu
@@ -350,7 +357,7 @@ public class Cli
                             if (choice == 0) return;
                             if (choice > notSorted.Count) return;
                         
-                            _fh.SortData(new []{notSorted[choice - 1]});
+                            _fh.SortData(new []{notSorted[choice - 1]}, true);
                             notSorted.RemoveAt(choice - 1);
                         }
                         catch (Exception e)

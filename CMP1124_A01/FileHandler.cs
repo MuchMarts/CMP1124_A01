@@ -10,10 +10,11 @@ public class FileHandler
     private Dictionary<string, int[]> _storedRoads;
     private Dictionary<string, int[]> _combined;
     private Dictionary<string, int[]> _sorted;
-    
+
+    private Dictionary<string, bool> _sortType;
+
     // translation layer for combined files for easy access
     private Dictionary<string, int> _nameToKey;
-    private Dictionary<int, string> _keyToName;
     // keyIndex used to distinguish between files used in combinations
     private int _keyIndex = 1;
 
@@ -23,8 +24,8 @@ public class FileHandler
         _combined = new Dictionary<string, int[]>();
         _sorted = new Dictionary<string, int[]>();
         
+        _sortType = new Dictionary<string, bool>();
         _nameToKey = new Dictionary<string, int>();
-        _keyToName = new Dictionary<int, string>();
     }
 
 
@@ -55,7 +56,6 @@ public class FileHandler
             if (!_nameToKey.ContainsKey(file))
             {
                 _nameToKey[file] = _keyIndex++;
-                _keyToName[_nameToKey[file]] = file;
             }
             keys.Add(_nameToKey[file]);
             
@@ -97,19 +97,21 @@ public class FileHandler
         return result;
     }
 
-    public void SortData(string[] files)
+    public void SortData(string[] files, bool ascending)
     {
         foreach (var file in files)
         {
             var name = file;
-            if (_sorted.ContainsKey(name)) continue;
+            if (_sorted.ContainsKey(name) && _sortType[name] == ascending) continue;
             if (_storedRoads.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.BubbleSort(_storedRoads[name]);
+                _sorted[name] = Algorithms.BubbleSort(_storedRoads[name], ascending);
+                _sortType[name] = ascending;
             }
             else if (_combined.ContainsKey(name))
             {
-                _sorted[name] = Algorithms.BubbleSort(_combined[name]);
+                _sorted[name] = Algorithms.BubbleSort(_combined[name], ascending);
+                _sortType[name] = ascending;
             }
             else
             {

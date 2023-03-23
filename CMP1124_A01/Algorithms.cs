@@ -18,7 +18,7 @@ public class Algorithms
 
     // Bubble Sort
     // Taken from lecture slides
-    public static int[] BubbleSort(int[] a)
+    public static int[] BubbleSort(int[] a, bool ascending = true)
     {
         int n = a.Length;
         int counter = 0;
@@ -26,9 +26,15 @@ public class Algorithms
             for (int j = 0; j < n-1-i; j++)
             {
                 counter++;
-                if (a[j + 1] < a[j]) {
-                    (a[j], a[j + 1]) = (a[j + 1], a[j]);
+                if (ascending)
+                { 
+                    if (a[j + 1] < a[j]) (a[j], a[j + 1]) = (a[j + 1], a[j]);
                 }
+                else
+                {
+                    if (a[j + 1] > a[j]) (a[j], a[j + 1]) = (a[j + 1], a[j]);
+                }
+                
             }
         }
         Console.WriteLine($"Bubble Sort: {counter} comparisons");

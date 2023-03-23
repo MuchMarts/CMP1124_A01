@@ -8,7 +8,7 @@ public class Testing
         
         fh.ReadFiles(fh.AllFiles());
         var file = Path.GetFileName(fh.AllFiles()[0]);
-        fh.SortData(new []{file});
+        fh.SortData(new []{file}, true);
         var output = fh.Search(file, 104);
         
         Console.WriteLine(file);
